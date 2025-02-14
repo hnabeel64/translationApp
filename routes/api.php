@@ -15,6 +15,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+/**
+ * @OA\PathItem(
+ *      path="/api"
+ * )
+ */
+
 Route::middleware('auth:sanctum')->controller(TranslationController::class)->group(function () {
     Route::post('/translations', 'store');
     Route::put('/translations/{translation}', 'update');

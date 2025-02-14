@@ -1,66 +1,144 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Translation Management API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Overview
+The Translation Management API is a Laravel 11-based RESTful service that allows users to manage translations across multiple locales. The API supports creating, updating, deleting, searching, and exporting translations while ensuring authentication via Laravel Sanctum.
 
-## About Laravel
+---
+## Features
+- Store translations for multiple locales (e.g., English, French, Spanish)  
+- CRUD operations for translations  
+- Search translations by locale and key  
+- Export translations as JSON  
+- Token-based authentication with Laravel Sanctum  
+- Optimized database seeding for 100K+ records  
+- Unit and feature tests with PestPHP  
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
+## Technology Stack
+- Backend: Laravel 11 (PHP 8+)
+- Database: MySQL (or any relational DB supported by Laravel)
+- Authentication: Laravel Sanctum
+- Caching: Redis (for optimized performance)
+- Testing: PestPHP
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
+## Installation Guide
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 1. Clone the Repository
+```bash
+git clone https://github.com/hnabeel64/translationApp.git
+cd translationApp
+```
 
-## Learning Laravel
+### 2. Install Dependencies
+```bash
+composer install
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 3. Configure Environment
+Copy the example `.env` file and configure your database settings:
+```bash
+cp .env.example .env
+```
+Update database credentials in `.env`:
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=translation_management
+DB_USERNAME=root
+DB_PASSWORD=yourpassword
+```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 4. Generate Application Key
+```bash
+php artisan key:generate
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 5. Run Migrations & Seed Data
+```bash
+php artisan migrate --seed
+```
 
-## Laravel Sponsors
+This will create necessary tables and seed 100K+ translations for testing.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
+## Running the Application
+Start the Laravel development server:
+```bash
+php artisan serve
+```
+By default, the API will be accessible at:
+```
+http://127.0.0.1:8000/api
+```
 
-### Premium Partners
+---
+## API Endpoints
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### Authentication Required: All endpoints require authentication using Laravel Sanctum.
 
-## Contributing
+### 1. Create a Translation
+```http
+POST /api/translations
+```
+Payload:
+```json
+{
+  "locale_id": 1,
+  "key": "welcome_message",
+  "content": "Welcome to our platform",
+  "tags": "web"
+}
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 2. Update a Translation
+```http
+PUT /api/translations/{id}
+```
+Payload:
+```json
+{
+  "content": "Updated content",
+  "tags": "mobile"
+}
+```
 
-## Code of Conduct
+### 3. Delete a Translation
+```http
+DELETE /api/translations/{id}
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 4. Search Translations
+```http
+GET /api/translations/search/{locale_code}?key=your_search_key
+```
 
-## Security Vulnerabilities
+### 5. Export Translations as JSON
+```http
+GET /api/translations/export
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
+## Testing
 
+Run the unit and feature tests with PestPHP:
+```bash
+php artisan test tests/Feature/TestTranslation.php
+```
+Run a specific test:
+```bash
+php artisan test tests/Feature/TestTranslation.php --filter it_can_create_a_translation
+```
+
+---
 ## License
+This project is open-source and available under the [MIT License](LICENSE).
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+## Contributing
+If you'd like to contribute, please fork the repository and submit a pull request. Make sure to write tests for any new features.
+
+---
+## Contact
+For issues or suggestions, feel free to open an issue on GitHub.
